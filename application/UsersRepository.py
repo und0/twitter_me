@@ -1,5 +1,5 @@
 from application.Exceptions import NoSuchUser
-from application import User
+from application.User import User
 
 class UsersRepository:
 

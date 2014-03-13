@@ -7,22 +7,23 @@ class ControllerResponse:
         self.err = None
         
     def set_error(self, code, message=None):
-        self.err = message
         self.code = code
+        self.err = message
         return self
     
     def set_bad_request(self, message=None):
         self.code = 400
-        self.content = message
+        self.err = message
         return self
     
     def set_not_found(self):
         self.code = 404
         return self
     
-    def set_ok(self, content, content_type=None):
+    def set_ok(self, content=None, content_type=None):
         self.code = 200
-        self.content = content
+        if content:
+            self.content = content
         if content_type:
             self.content_type = content_type
         return self

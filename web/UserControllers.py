@@ -1,5 +1,3 @@
-import json
-from StringIO import StringIO
 from web.ControllerResponse import ControllerResponse
 from application.Exceptions import NoSuchUser
 
@@ -30,16 +28,16 @@ class UserController:
             return ControllerResponse().set_bad_request("User name not specified")
         
         user = self.users_repo.create_user(user_name)
-        return ControllerResponse().set_ok( str({"id":user.get_id()}) )
+        return ControllerResponse().set_ok( {"id":user.get_id()} )
     
     def follow_user(self, params):
         '''
         
         '''
-        user_id = self.get_uid(params)
-        if not user_id:
-            return ControllerResponse().set_bad_request("User ID not specified")
-        user_id = int(user_id)
+        try:
+            user_id = self.get_uid(params)
+        except ValueError: return ControllerResponse().set_bad_request("User ID is invalid")
+        if not user_id: return ControllerResponse().set_bad_request("User ID not specified")
         
         follow_user_id = self.get_param('fuid', params)
         if not follow_user_id:
@@ -52,12 +50,13 @@ class UserController:
         except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
-        return ControllerResponse().set_ok('cool')
+        return ControllerResponse().set_ok()
     
     def unfollow_user(self, params):
-        user_id = self.get_uid(params)
-        if not user_id:
-            return ControllerResponse().set_bad_request("User ID not specified")
+        try:
+            user_id = self.get_uid(params)
+        except ValueError: return ControllerResponse().set_bad_request("User ID is invalid")
+        if not user_id: return ControllerResponse().set_bad_request("User ID not specified")
         
         unfollow_user_id = self.get_param('ufuid', params)
         if not unfollow_user_id:
@@ -70,12 +69,13 @@ class UserController:
         except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
-        return ControllerResponse().set_ok('cool')
+        return ControllerResponse().set_ok()
     
     def post_message(self, params):
-        user_id = self.get_uid(params)
-        if not user_id:
-            return ControllerResponse().set_bad_request("User ID not specified")
+        try:
+            user_id = self.get_uid(params)
+        except ValueError: return ControllerResponse().set_bad_request("User ID is invalid")
+        if not user_id: return ControllerResponse().set_bad_request("User ID not specified")
         
         message = self.get_param('m', params)
         if not message:
@@ -87,12 +87,14 @@ class UserController:
         except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
-        return ControllerResponse().set_ok(message);
+        return ControllerResponse().set_ok();
     
     def get_user_feed(self, params):
-        user_id = self.get_uid(params)
-        if not user_id:
-            return ControllerResponse().set_bad_request("User ID not specified")
+        try:
+            user_id = self.get_uid(params)
+        except ValueError: return ControllerResponse().set_bad_request("User ID is invalid")
+        if not user_id: return ControllerResponse().set_bad_request("User ID not specified")
+        
         message = self.get_param('fuid', params)
         if not message:
             return ControllerResponse().set_bad_request("Feed-user not specified")
@@ -103,12 +105,13 @@ class UserController:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         posts = user.get_posts(user_id)
-        return posts
+        return ControllerResponse().set_ok(content=posts)
     
     def get_global_feed(self, params):
-        user_id = self.get_uid(params)
-        if not user_id:
-            return ControllerResponse().set_bad_request("User ID not specified")
+        try:
+            user_id = self.get_uid(params)
+        except ValueError: return ControllerResponse().set_bad_request("User ID is invalid")
+        if not user_id: return ControllerResponse().set_bad_request("User ID not specified")
         
         try:
             user = self.users_repo.get_user(user_id)
@@ -116,9 +119,7 @@ class UserController:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
 
         posts = user.get_feed()
-        content = StringIO()
-        json.dump(posts, content)
-        return ControllerResponse().set_ok(posts, content.getvalue())
+        return ControllerResponse().set_ok(posts)
     
     
     

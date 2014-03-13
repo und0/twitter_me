@@ -1,7 +1,5 @@
 import humongolus.field as field
 import humongolus as orm 
-from domain.UserPost import UserPost
-from domain.PostMessage import PostMessage
 
 class UserEntity(orm.Document):
 
