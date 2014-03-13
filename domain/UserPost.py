@@ -8,4 +8,7 @@ class UserPost(orm.EmbeddedDocument):
     
     def __init__(self):
         orm.EmbeddedDocument.__init__(self)
-        self.created = datetime.now()        
+        self.created = datetime.now()
+        
+    def dict(self):
+        return {'created':self.created}        

@@ -8,3 +8,8 @@ class PostMessage(UserPost):
     def set_message(self, message):
         self.message = message
         return self
+    
+    def dict(self):
+        dict = UserPost.dict(self)
+        dict['message'] = str(self.message)
+        return dict

@@ -1,6 +1,5 @@
 from User import User
 from application.NoSuchUser import NoSuchUser
-from domain.UserEntity import UserEntity
 
 class UsersRepository:
 
@@ -12,8 +11,7 @@ class UsersRepository:
         return User(entity, self.user_service)
     
     def get_user(self, user_id):
-        #entity = self.user_service.get_user(user_id)
-        entity = UserEntity.find_one(user_id)
+        entity = self.user_service.get_user(user_id)
         if not entity:
             raise NoSuchUser(user_id)
         return User(entity, self.user_service);
