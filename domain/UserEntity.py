@@ -1,6 +1,7 @@
 import humongolus.field as field
 import humongolus as orm 
 from domain.UserPost import UserPost
+from domain.PostMessage import PostMessage
 
 class UserEntity(orm.Document):
 
@@ -9,6 +10,14 @@ class UserEntity(orm.Document):
 
     _id = field.AutoIncrement()
     name = field.Char()
-    followers = orm.List(type=int)
     following = orm.List(type=int)
-    posts = orm.List(type=UserPost)
+    followers = orm.List(type=int)
+    posts = orm.List(type=[UserPost,PostMessage]) 
+
+    @classmethod
+    def all_fields(cls):
+        return ["following", "followers", "posts"]
+    
+    @classmethod
+    def field_posts(cls):
+        return ["posts"]

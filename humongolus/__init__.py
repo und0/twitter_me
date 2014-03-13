@@ -24,16 +24,16 @@ from bson.objectid import ObjectId
 
 EMPTY = ("", " ", None, "None")
 
-def settings(logger, db_connection):
-    """Set the logger and MongoDB Connection
+def settings(db_logger, db_connection):
+    """Set the db_logger and MongoDB Connection
 
     Apply Model Indexes
 
     :Parameters:
-        - `logger`: instance of the Python Logger class
+        - `db_logger`: instance of the Python Logger class
         - `db_connection`: instance of a pymongo Connection class
     """
-    _settings.LOGGER = logger
+    _settings.LOGGER = db_logger
     _settings.DB_CONNECTION = db_connection
     ensure_indexes()
 
@@ -231,7 +231,7 @@ class Field(object):
         - `validate`: an instance :class: `~FieldValidator` for custom validation
     """
     
-    logger = None
+    db_logger = None
     _name = None
     _conn = None
     _value = None
@@ -395,7 +395,7 @@ class Lazy(object):
 
 class List(list):
     """Used to describe an array in a :class: `~Document` or :class: `~EmbeddedDocument`. Extends list."""
-    logger = None
+    db_logger = None
     _type = None
     _length = None
     _dbkey = None
@@ -495,7 +495,7 @@ class List(list):
         return unicode(self.__class__.__name__)
         
 class base(dict):
-    logger = None
+    db_logger = None
     _inited = False
     _base = None
     _parent = None
@@ -720,10 +720,10 @@ class Document(base):
     @classmethod
     def __ensureindexes__(cls):
         try:
-            conn = cls._connection()
+            db_connection = cls._connection()
         except: pass
 
-        for i in cls._indexes: i.create(conn)
+        for i in cls._indexes: i.create(db_connection)
 
     @classmethod
     def __remove__(cls, *args, **kwargs):
@@ -817,7 +817,7 @@ class Index(object):
         for k,v in kwargs.iteritems():
             if hasattr(self, "_%s" % k): setattr(self, "_%s" % k, v)
     
-    def create(self, conn):
+    def create(self, db_connection):
         if not isinstance(self._key, list): self._key = [self._key]
         ob = dict(
             drop_dups=self._drop_dups, 
@@ -829,7 +829,7 @@ class Index(object):
             sparse=self._sparse,
         )
         if self._ttl: ob['expireAfterSeconds'] = self._ttl
-        conn.ensure_index(self._key, **ob)
+        db_connection.ensure_index(self._key, **ob)
 
 def ensure_indexes(typ=Document):
     for cls in typ.__subclasses__():

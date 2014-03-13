@@ -20,8 +20,8 @@ class ControllerResponse:
         self.code = 404
         return self
     
-    def set_response(self, code, content, content_type=None):
-        self.code = code
+    def set_ok(self, content, content_type=None):
+        self.code = 200
         self.content = content
         if content_type:
             self.content_type = content_type
