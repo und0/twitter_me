@@ -12,7 +12,7 @@ class UserService:
         user.save()
     
     def get_user(self, user_id):
-        return UserEntity.find_one(user_id, UserEntity.all_fields())
+        return UserEntity.find_one(user_id)
     
     def get_users(self, user_ids, fields):
         return UserEntity
@@ -31,13 +31,16 @@ class UserService:
         if not entity:
             return None
         
+        #f_users = UserEntity.find(entity.following, UserEntity.field_posts())
         f_users = entity.get_followed_users(entity)
         print f_users
             
+        posts = {}
+        for u in f_users:
+            u_posts = []
+            for post in u.posts:
+                u_posts.append(post.dict())
+            if len(u_posts)>0:
+                posts[u._id] = u_posts
         
-        #users = UserEntity.find(entity.following, UserEntity.field_posts())
-        #posts = {}
-        #for u in users:
-            #posts[u._id] = u.posts
-        
-        #return posts
+        return posts

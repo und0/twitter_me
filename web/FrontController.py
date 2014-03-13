@@ -102,7 +102,8 @@ server.bind_controller("/user/create", users_controller, 'create_user')
 server.bind_controller("/user/follow", users_controller, 'follow_user')
 server.bind_controller("/user/unfollow", users_controller, 'unfollow_user')
 server.bind_controller("/user/post", users_controller, 'post_message')
-server.bind_controller("/user/feed/get", users_controller, 'get_feed')
+server.bind_controller("/user/feed/get", users_controller, 'get_global_feed')
+server.bind_controller("/feed/get", users_controller, 'get_user_feed')
 
 
 

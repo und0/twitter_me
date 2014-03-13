@@ -1,6 +1,18 @@
 from web.ControllerResponse import ControllerResponse
-from application.NoSuchUser import NoSuchUser
+from application import Exceptions.NoSuchUser
+import json
+from StringIO import StringIO
+
 class UserController:
+    '''
+    A controller that handles user-related requests:
+      - User creation
+      - User follow assignment (i.e. have a different user's posts in my feed)
+      - User unfollow
+      - Post a message (followers will see it in their feeds)
+      - Get my feed
+      - Get a specified user's posts
+    '''
 
     def __init__(self, users_repo):
         self.users_repo = users_repo
@@ -28,7 +40,7 @@ class UserController:
         try:
             user = self.users_repo.get_user(user_id)
             user.follow(follow_user_id)
-        except NoSuchUser as e:
+        except Exceptions as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         return ControllerResponse().set_ok('cool')
@@ -46,7 +58,7 @@ class UserController:
         try:
             user = self.users_repo.get_user(user_id)
             user.unfollow(unfollow_user_id)
-        except NoSuchUser as e:
+        except Exceptions as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         return ControllerResponse().set_ok('cool')
@@ -63,23 +75,41 @@ class UserController:
         try:
             user = self.users_repo.get_user(user_id)
             user.post(message)
-        except NoSuchUser as e:
+        except Exceptions as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         return ControllerResponse().set_ok(message);
     
-    def get_feed(self, params):
+    def get_user_feed(self, params):
+        user_id = self.get_uid(params)
+        if not user_id:
+            return ControllerResponse().set_bad_request("User ID not specified")
+        message = self.get_param('fuid', params)
+        if not message:
+            return ControllerResponse().set_bad_request("Feed-user not specified")
+        
+        try:
+            user = self.users_repo.get_user(user_id)
+        except Exceptions as e:
+            return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
+        
+        posts = user.get_posts(user_id)
+        return posts
+    
+    def get_global_feed(self, params):
         user_id = self.get_uid(params)
         if not user_id:
             return ControllerResponse().set_bad_request("User ID not specified")
         
         try:
             user = self.users_repo.get_user(user_id)
-        except NoSuchUser as e:
+        except Exceptions as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
 
         posts = user.get_feed()
-        return ControllerResponse().set_ok(posts)
+        content = StringIO()
+        json.dump(posts, content)
+        return ControllerResponse().set_ok(posts, content.getvalue())
     
     
     

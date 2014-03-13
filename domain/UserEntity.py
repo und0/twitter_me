@@ -12,7 +12,7 @@ class UserEntity(orm.Document):
     name = field.Char()
     following = orm.List(type=int)
     followers = orm.List(type=int)
-    posts = orm.List(type=[UserPost,PostMessage]) 
+    posts = orm.List() 
 
     def remove_follower(self, follower_uid):
         query = {"_id":self._id}
