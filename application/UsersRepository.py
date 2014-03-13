@@ -1,5 +1,5 @@
-from User import User
-from application import Exceptions.NoSuchUser
+from application.Exceptions import NoSuchUser
+from application import User
 
 class UsersRepository:
 
@@ -13,5 +13,5 @@ class UsersRepository:
     def get_user(self, user_id):
         entity = self.user_service.get_user(user_id)
         if not entity:
-            raise Exceptions(user_id)
+            raise NoSuchUser(user_id)
         return User(entity, self.user_service);

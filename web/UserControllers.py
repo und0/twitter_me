@@ -1,7 +1,7 @@
-from web.ControllerResponse import ControllerResponse
-from application import Exceptions.NoSuchUser
 import json
 from StringIO import StringIO
+from web.ControllerResponse import ControllerResponse
+from application.Exceptions import NoSuchUser
 
 class UserController:
     '''
@@ -18,15 +18,24 @@ class UserController:
         self.users_repo = users_repo
     
     def create_user(self, params):
+        '''
+        Handle a request to create a new user in the system.
+        Required parameters:
+          - uname: The user's name.
+        Upon creation, the user's ID gets automatically assigned, and its value
+        will be encoded into a JSON response.
+        '''
         user_name = self.get_param('uname', params)
         if not user_name:
             return ControllerResponse().set_bad_request("User name not specified")
         
         user = self.users_repo.create_user(user_name)
-        
-        return ControllerResponse().set_ok("user_id="+str(user.get_id()))
+        return ControllerResponse().set_ok( str({"id":user.get_id()}) )
     
     def follow_user(self, params):
+        '''
+        
+        '''
         user_id = self.get_uid(params)
         if not user_id:
             return ControllerResponse().set_bad_request("User ID not specified")
@@ -40,7 +49,7 @@ class UserController:
         try:
             user = self.users_repo.get_user(user_id)
             user.follow(follow_user_id)
-        except Exceptions as e:
+        except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         return ControllerResponse().set_ok('cool')
@@ -58,7 +67,7 @@ class UserController:
         try:
             user = self.users_repo.get_user(user_id)
             user.unfollow(unfollow_user_id)
-        except Exceptions as e:
+        except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         return ControllerResponse().set_ok('cool')
@@ -75,7 +84,7 @@ class UserController:
         try:
             user = self.users_repo.get_user(user_id)
             user.post(message)
-        except Exceptions as e:
+        except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         return ControllerResponse().set_ok(message);
@@ -90,7 +99,7 @@ class UserController:
         
         try:
             user = self.users_repo.get_user(user_id)
-        except Exceptions as e:
+        except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
         posts = user.get_posts(user_id)
@@ -103,7 +112,7 @@ class UserController:
         
         try:
             user = self.users_repo.get_user(user_id)
-        except Exceptions as e:
+        except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
 
         posts = user.get_feed()
