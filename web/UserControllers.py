@@ -1,7 +1,5 @@
 from web.ControllerResponse import ControllerResponse
 from application.Exceptions import NoSuchUser, UnauthorizedAction
-from StringIO import StringIO
-import json
 
 class UserController:
     '''
@@ -30,7 +28,7 @@ class UserController:
             return ControllerResponse().set_bad_request("User name not specified")
         
         user = self.users_repo.create_user(user_name)
-        return ControllerResponse().set_ok( {"id":user.get_id()} )
+        return ControllerResponse().set_ok( {'id':user.get_id()} )
     
     def follow_user(self, params):
         '''
@@ -112,7 +110,10 @@ class UserController:
         except UnauthorizedAction as e:
             return ControllerResponse().set_error(500, e.desc)
         
-        return ControllerResponse().set_ok(content=posts)
+        data = []
+        for post in posts:
+            data.append(post.get_dict())
+        return ControllerResponse().set_ok(data)
     
     def get_global_feed(self, params):
         try:
@@ -130,10 +131,10 @@ class UserController:
         except UnauthorizedAction as e:
             return ControllerResponse().set_error(500, e.desc)
 
-        json = {}
+        data = {}
         for uid, user in posts.iteritems():
-            json[uid] = user.get_dict()
-        return ControllerResponse().set_ok(json)
+            data[uid] = user.get_dict()
+        return ControllerResponse().set_ok(data)
     
     
     

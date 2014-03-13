@@ -1,6 +1,8 @@
 import BaseHTTPServer
 from urlparse import urlparse
 from urlparse import parse_qs
+import json
+from StringIO import StringIO
 
 class SimpleFrontController(BaseHTTPServer.BaseHTTPRequestHandler):
 	"""
@@ -10,10 +12,6 @@ class SimpleFrontController(BaseHTTPServer.BaseHTTPRequestHandler):
 	def __init__(self, request, client_address, server, controllers):
 		self.controller_callbacks = controllers
 		BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, request, client_address, server)
-	
-	def send_header(self, keyword, value):
-		' Overridden cause we''re an API - we don'' have headers '
-		pass
 	
 	def do_GET(self):
 		parsedUrl = urlparse(self.path)
@@ -29,13 +27,19 @@ class SimpleFrontController(BaseHTTPServer.BaseHTTPRequestHandler):
 		method = getattr(controller, callback);
 		response = method(params)
 		
+		content = StringIO()
 		if response.err:
-			content = str({'success':'false', 'error':response.err})
+			json.dump({'success':'false', 'error':response.err}, content)
 		else:
-			content = str({'success':'true', 'payload':response.content})
+			json.dump({'success':'true', 'payload':response.content}, content)
+		content = content.getvalue()
 		self.wfile.write(content)
-		self.end_headers()
-		self.send_response(response.code)
+		#self.send_response(response.code)
+
+	def send_header(self, keyword, value):
+		' Overridden cause we''re an API - we don'' have headers... '
+		pass
+	
 
 
 class SimpleControllersHttpServer(BaseHTTPServer.HTTPServer):

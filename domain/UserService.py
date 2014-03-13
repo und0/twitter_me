@@ -1,5 +1,4 @@
 from domain.UserEntity import UserEntity
-from domain.PostMessage import PostMessage
 
 class UserService:
 
@@ -13,10 +12,10 @@ class UserService:
         user.save()
     
     def get_user(self, user_id):
-        return UserEntity.find_one(user_id)
-    
-    def get_users(self, user_ids, fields):
-        return UserEntity
+        #return UserEntity.find_one(user_id)
+        user = UserEntity()
+        user.read(user_id)
+        return user
     
     def remove_follower(self, user, follower_uid):
         user.remove_follower(follower_uid);
@@ -35,10 +34,10 @@ class UserService:
         #f_users = UserEntity.find(entity.following, UserEntity.field_posts())
         f_users = entity.get_followed_users(entity)
         
-        ' Arrange posts onto the form of a user-oriented dictionary '    
-        posts = {}
+        ' Arrange posts onto the form of a dictionary, with the user-id as a key '    
+        user_posts = {}
         for u in f_users:
             if u.posts and len(u.posts)>0:
-                posts[u._id] = u
+                user_posts[u._id] = u
         
-        return posts
+        return user_posts

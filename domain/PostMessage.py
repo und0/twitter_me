@@ -9,13 +9,13 @@ class PostMessage(UserPost):
         self.message = message
         return self
 
-    def set_from_dict(self, dict):
-        UserPost.set_from_dict(self, dict)
-        self.message = dict['message']
+    def set_from_dict(self, dic):
+        UserPost.set_from_dict(self, dic)
+        self.message = dic['message']
         return self
     
     def get_dict(self):
-        dict = UserPost.get_dict(self)
-        dict['message'] = str(self.message)
-        return dict
+        dic = UserPost.get_dict(self)
+        dic['message'] = str(self.message)
+        return dic
         

@@ -10,11 +10,11 @@ class UserPost(orm.EmbeddedDocument):
         orm.EmbeddedDocument.__init__(self)
         self.created = datetime.now()
         
-    def set_from_dict(self, dict):
-        self.created = dict['created']
+    def set_from_dict(self, dic):
+        self.created = dic['created']
 
     def get_dict(self):
-        val = {}
+        dic = {}
         if self.created:
-            val['created'] = str(self.created)
-        return val
+            dic['created'] = str(self.created)
+        return dic
