@@ -1,10 +1,8 @@
 import humongolus.field as field
 import humongolus as orm 
+from domain.UserPost import UserPost
 
 class UserEntity(orm.Document):
-    '''
-    classdocs
-    '''
 
     _db = "twitter_me"
     _collection = "users"
@@ -13,4 +11,4 @@ class UserEntity(orm.Document):
     name = field.Char()
     followers = orm.List(type=int)
     following = orm.List(type=int)
-
+    posts = orm.List(type=UserPost)

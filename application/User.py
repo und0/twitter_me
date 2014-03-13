@@ -1,3 +1,5 @@
+from domain.PostMessage import PostMessage
+
 class User:
 
     def __init__(self, entity):
@@ -19,10 +21,10 @@ class User:
         self.entity.followers.remove(user_id)
     
     def post(self, message):
-        pass
+        self.entity.posts.insert(0, PostMessage().set_message(message));
     
     def getFeed(self):
-        pass
+        return self.entity.posts
     
     def persist(self):
         self.entity.save()

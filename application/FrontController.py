@@ -14,7 +14,7 @@ import UserControllers
 from UsersRepository import UsersRepository
 from pymongo.connection import Connection
 
-class FrontController(BaseHTTPServer.BaseHTTPRequestHandler):
+class SimpleFrontController(BaseHTTPServer.BaseHTTPRequestHandler):
 	"""
 	A 
 	"""
@@ -29,7 +29,7 @@ class FrontController(BaseHTTPServer.BaseHTTPRequestHandler):
 		
 		'Based on the path, find and invoke a pre-mapped controller'
 		if not parsedUrl.path in self.controllers:
-			self.send_response(200)
+			self.send_response(404)
 			return
 		
 		controller = self.controllers[parsedUrl.path]
@@ -58,8 +58,16 @@ class ControllersHttpServer(BaseHTTPServer.HTTPServer):
 		self.controllers[url] = ctrl
 	
 	def finish_request(self, request, client_address):
-		"""Finish one request by instantiating a request handler class."""
-		FrontController(request, client_address, self, self.controllers)
+		''' Overridden in order to perform an instantiation of our very own
+			front-controller as a request handler rather than instantiating
+			a handler in the default fashion.
+			The main reason is that the default instantiation, though generic
+			in terms of the concrete class, doesn't expect a class that would
+			also take the controllers dictionary as an init-parameter; our
+			customized front-controller relies on it, however.
+			(source is BaseServer.finish_request)
+			@see: SimpleFrontController '''
+		SimpleFrontController(request, client_address, self, self.controllers)
 
 
 
@@ -90,7 +98,7 @@ server.add_controller("/user/create", UserControllers.CreateUserController(users
 
 
 
-print "HTTP server", FrontController.server_version, "started"
+print "HTTP server", SimpleFrontController.server_version, "started"
 print "Listening on", HTTP_HOST + ":" + str(HTTP_PORT)
 try:
 	server.serve_forever()

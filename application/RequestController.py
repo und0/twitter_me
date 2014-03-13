@@ -1,4 +1,4 @@
-from application.HttpResponse import HttpResponse
+from application.ControllerResponse import ControllerResponse
 class RequestController:
     '''
     A concrete handler of an HTTP request.
@@ -10,4 +10,4 @@ class RequestController:
         '''
 
     def process(self, params):
-        return HttpResponse();
+        return ControllerResponse();
