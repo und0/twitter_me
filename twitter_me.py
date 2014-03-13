@@ -21,7 +21,7 @@ def setup_server(host, port, app_context):
     server.bind_controller("/user/unfollow", users_controller, 'unfollow_user')
     server.bind_controller("/user/tweet", users_controller, 'post_message')
     server.bind_controller("/user/tweets/get", users_controller, 'get_global_feed')
-    server.bind_controller("/tweet/get", users_controller, 'get_user_feed')
+    server.bind_controller("/tweets/get", users_controller, 'get_user_feed')
     return server
     
 

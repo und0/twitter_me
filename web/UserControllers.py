@@ -1,5 +1,7 @@
 from web.ControllerResponse import ControllerResponse
-from application.Exceptions import NoSuchUser
+from application.Exceptions import NoSuchUser, UnauthorizedAction
+from StringIO import StringIO
+import json
 
 class UserController:
     '''
@@ -95,16 +97,21 @@ class UserController:
         except ValueError: return ControllerResponse().set_bad_request("User ID is invalid")
         if not user_id: return ControllerResponse().set_bad_request("User ID not specified")
         
-        message = self.get_param('fuid', params)
-        if not message:
+        target_user_id = self.get_param('fuid', params)
+        if not target_user_id:
             return ControllerResponse().set_bad_request("Feed-user not specified")
+        target_user_id = int(target_user_id)
         
         try:
             user = self.users_repo.get_user(user_id)
         except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
         
-        posts = user.get_posts(user_id)
+        try:
+            posts = user.get_posts(target_user_id)
+        except UnauthorizedAction as e:
+            return ControllerResponse().set_error(500, e.desc)
+        
         return ControllerResponse().set_ok(content=posts)
     
     def get_global_feed(self, params):
@@ -118,8 +125,15 @@ class UserController:
         except NoSuchUser as e:
             return ControllerResponse().set_error(500, "No such user: "+str(e.user_id))
 
-        posts = user.get_feed()
-        return ControllerResponse().set_ok(posts)
+        try:
+            posts = user.get_feed()
+        except UnauthorizedAction as e:
+            return ControllerResponse().set_error(500, e.desc)
+
+        json = {}
+        for uid, user in posts.iteritems():
+            json[uid] = user.get_dict()
+        return ControllerResponse().set_ok(json)
     
     
     

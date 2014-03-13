@@ -1,5 +1,6 @@
 import humongolus.field as field
-import humongolus as orm 
+import humongolus as orm
+from domain.PostMessage import PostMessage
 
 class UserEntity(orm.Document):
 
@@ -9,13 +10,7 @@ class UserEntity(orm.Document):
     _id = field.AutoIncrement()
     name = field.Char()
     following = orm.List(type=int)
-    followers = orm.List(type=int)
-    posts = orm.List() 
-
-    def remove_follower(self, follower_uid):
-        query = {"_id":self._id}
-        update = {'$pull':{"followers":follower_uid}}
-        self._coll.update(query, update);
+    posts = orm.List()
         
     def remove_following(self, following_uid):
         query = {"_id":self._id}
@@ -36,15 +31,44 @@ class UserEntity(orm.Document):
             ids.append({'_id':f_user_id})
         
         query = {'$or': ids}
-        return self._coll.find(query)
+        fields = {"_id":1, "name":1, "posts":1}
+        coll = self._conn[self._db][self._collection]
+        users_cursor = coll.find(query, fields)
+        users = []
+        for doc in users_cursor:
+            ent = UserEntity()
+            ent.set_from_dict(doc)
+            users.append(ent)
+        return users
 
+    def set_from_dict(self, dict):
+        self._id = dict['_id']
+        self.name = dict['name']
+        
+        self.following = []
+        if 'following' in dict:
+            self.following = dict['following']
+        
+        self.posts = []
+        if 'posts' in dict:
+            for post in dict['posts']:
+                self.posts.append( PostMessage().set_from_dict(post) )
+        return self
+    
+    def get_dict(self):
+        dict = {}
+        dict['id']=self._id
+        dict['name']=self.name
+        dict['posts'] = []
+        for post in self.posts:
+            dict['posts'].append(post.get_dict())
+        return dict
+    
     def __str__(self):
-        return str({"_id":self._id, "name":self.name, "#following":len(self.following), "#followers":len(self.followers), "#posts":len(self.posts)})
+        if not self._id:
+            return "_id=None"
+        return "_id="+self._id
 
     @classmethod
     def all_fields(cls):
         return ["name", "following", "followers", "posts"]
-    
-    @classmethod
-    def field_posts(cls):
-        return ["posts"]

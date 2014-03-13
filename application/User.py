@@ -20,11 +20,6 @@ class User:
         if not user_id in self.entity.following:
             self.entity.following.append(user_id)
             self.user_service.update_user(self.entity)
-        
-        ' Add myself to the list of followers of the users '
-        if not self.entity._id in f_entity.followers:
-            f_entity.followers.append(self.entity._id)
-            self.user_service.update_user(f_entity)
     
     def unfollow(self, user_id):
         uf_entity = self.user_service.get_user(user_id)
@@ -37,19 +32,8 @@ class User:
             #self.entity.save()
             ####################################################################################
             # This is merely a patch to replace the lines above, seeing that the ORM for some reason
-            # can't handle list items removal remove() (BUG???) -- though append() works fine!!! 
+            # can't handle list items removal via remove() (BUG???) -- though append() works fine!!! 
             self.user_service.remove_following(self.entity, user_id)        
-        
-
-        ' Remove myself from the user I will not follow anymore '
-        if self.entity._id in uf_entity.followers:
-            #uf_entity.followers.remove(self.entity._id)
-            #uf_entity.save()
-            ####################################################################################
-            # This is merely a patch to replace the lines above, seeing that the ORM for some reason
-            # can't handle list items removal remove() (BUG???) -- though append() works fine!!! 
-            self.user_service.remove_follower(uf_entity, self.entity._id)
-
     
     def post(self, message):
         post = PostMessage().set_message(message)

@@ -8,8 +8,14 @@ class PostMessage(UserPost):
     def set_message(self, message):
         self.message = message
         return self
+
+    def set_from_dict(self, dict):
+        UserPost.set_from_dict(self, dict)
+        self.message = dict['message']
+        return self
     
-    def dict(self):
-        dict = UserPost.dict(self)
+    def get_dict(self):
+        dict = UserPost.get_dict(self)
         dict['message'] = str(self.message)
         return dict
+        

@@ -1,4 +1,5 @@
 from domain.UserEntity import UserEntity
+from domain.PostMessage import PostMessage
 
 class UserService:
 
@@ -33,14 +34,11 @@ class UserService:
         
         #f_users = UserEntity.find(entity.following, UserEntity.field_posts())
         f_users = entity.get_followed_users(entity)
-        print f_users
-            
+        
+        ' Arrange posts onto the form of a user-oriented dictionary '    
         posts = {}
         for u in f_users:
-            u_posts = []
-            for post in u.posts:
-                u_posts.append(post.dict())
-            if len(u_posts)>0:
-                posts[u._id] = u_posts
+            if u.posts and len(u.posts)>0:
+                posts[u._id] = u
         
         return posts
