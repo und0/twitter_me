@@ -166,7 +166,7 @@ class Widget(object):
         self.__args__ = args
         self.__kwargs__ = kwargs
         self.object = kwargs.pop('object', None)
-        self._data = kwargs.pop('data', None)
+        self._data = kwargs.pop('model', None)
         self.errors = []
         kwargs['prepend'] = self._prepend if self._prepend and not 'prepend' in kwargs else kwargs.pop('prepend', None)
         self.attributes = Attributes(**kwargs)
@@ -193,7 +193,7 @@ class Widget(object):
         return fields
 
     def clean(self, val, doc=None):
-        """Override to apply custom parsing of form data. 
+        """Override to apply custom parsing of form model. 
         This is called anytime you set the value of a Field.
         Should always return the "cleaned" value or raise a FieldException on error
 
@@ -643,8 +643,8 @@ class Document(base):
         self.__hargskeys__ = set()
         self._conn = _settings.DB_CONNECTION        
         self._coll = self.__class__._connection()
-        if kwargs.get('data'):
-            self._map(kwargs.get('data'), init=True)
+        if kwargs.get('model'):
+            self._map(kwargs.get('model'), init=True)
         if kwargs.get('id'): 
             self._doc(kwargs['id'])        
     """

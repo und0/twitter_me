@@ -1,4 +1,4 @@
-from data.PostMessage import PostMessage
+from model.PostMessage import PostMessage
 from domain.Exceptions import NoSuchUser
 from domain.Exceptions import UnauthorizedAction
 

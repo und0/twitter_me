@@ -1,6 +1,6 @@
 import humongolus.field as field
 import humongolus as orm
-from data.PostMessage import PostMessage
+from model.PostMessage import PostMessage
 from domain.Exceptions import NoSuchUser
 
 class UserEntity(orm.Document):

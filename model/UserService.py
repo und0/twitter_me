@@ -1,4 +1,4 @@
-from data.UserEntity import UserEntity
+from model.UserEntity import UserEntity
 
 class UserService:
 

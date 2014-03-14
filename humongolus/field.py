@@ -201,7 +201,7 @@ class Email(Regex):
     _reg = re.compile(
     r"(^[-!#$%&'*/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*/=?^_`{}|~0-9A-Z]+)*"  # dot-atom
     r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]|\\[\001-011\013\014\016-\177])*"' # quoted-string
-    r')@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$', re.IGNORECASE)  # data
+    r')@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$', re.IGNORECASE)  # model
 
 class Phone(Char):
 
