@@ -4,18 +4,18 @@ import sys
 from web import UserControllers
 from pymongo.connection import Connection
 from web.FrontController import SimpleControllersHttpServer
-from AppContext import SimpleAppContext
+from model import Mongo
 
-def db_connect(host, port, app_context):
-    db_connection = Connection(host, port)
+def setup_orm(host, port):
+    Mongo.db_connection = Connection(host, port)
     
     logging.basicConfig(format='%(asctime)-15s %(message)s')
     db_logger = logging.getLogger("humongolus")
-    orm.settings(db_logger, db_connection)
+    orm.settings(db_logger, Mongo.db_connection)
     
-def setup_server(host, port, app_context):
+def setup_server(host, port):
     server = SimpleControllersHttpServer((host, port))
-    users_controller = UserControllers.UserController(app_context.users_repo)
+    users_controller = UserControllers.UserController()
     server.bind_controller("/user/create", users_controller, 'create_user')
     server.bind_controller("/user/follow", users_controller, 'follow_user')
     server.bind_controller("/user/unfollow", users_controller, 'unfollow_user')
@@ -36,15 +36,12 @@ def main():
     HTTP_PORT = 8080
     if len(sys.argv) > 2:
         HTTP_PORT = int(sys.argv[2])
-
-    ' First and foremost: set up the domain context '    
-    app_context = SimpleAppContext()
     
     ' Set up DB '
-    db_connect(DB_HOST, DB_PORT, app_context)
+    setup_orm(DB_HOST, DB_PORT)
 
     ' Set up the server '
-    server = setup_server(HTTP_HOST, HTTP_PORT, app_context)
+    server = setup_server(HTTP_HOST, HTTP_PORT)
     
     ' Start! '    
     print "Twitter.me HTTP server started"

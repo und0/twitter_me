@@ -12,16 +12,15 @@ class UserService:
         user.save()
     
     def get_user(self, user_id):
-        #return UserEntity.find_one(user_id)
-        user = UserEntity()
-        user.read(user_id)
+        user = UserEntity.find_user(user_id)
         return user
-    
-    def remove_follower(self, user, follower_uid):
-        user.remove_follower(follower_uid);
 
-    def remove_following(self, user, following_uid):
-        user.remove_following(following_uid)
+    def add_follow(self, user, follow_uid):
+        user.following.append(follow_uid)
+        user.save()
+    
+    def remove_follow(self, user, follow_uid):
+        user.remove_follow(follow_uid)
         
     def add_post(self, user, post):
         user.add_post(post)

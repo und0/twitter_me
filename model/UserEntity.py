@@ -2,6 +2,7 @@ import humongolus.field as field
 import humongolus as orm
 from model.PostMessage import PostMessage
 from domain.Exceptions import NoSuchUser
+from model import Mongo
 
 class UserEntity(orm.Document):
 
@@ -13,42 +14,41 @@ class UserEntity(orm.Document):
     following = orm.List(type=int)
     posts = orm.List()
     
-    def read(self, user_id):
+    @classmethod
+    def find_user(cls, user_id):
         query = {'_id':user_id}
-        coll = self._conn[self._db][self._collection]
-        user_doc = coll.find_one(query)
+        user_doc = cls.get_coll().find_one(query)
         if not user_doc:
             raise NoSuchUser(user_id)
         
-        self.set_from_dict(user_doc)
-        return self
-        
-    def remove_following(self, following_uid):
+        return UserEntity().set_from_dict(user_doc);
+    
+    def remove_follow(self, following_uid):
+        # This is merely a patch to replace the lines above, seeing that the ORM for some reason
+        # can't handle list items removal via remove() (BUG???) -- though append() works fine!!! 
         query = {"_id":self._id}
         update = {'$pull':{"following":following_uid}}
-        self._coll.update(query, update);
+        self.get_collection().update(query, update);
         
     def add_post(self, post):
         query = {"_id":self._id}
         update = { '$push':{ "posts":{'$each':[post.get_dict()], '$sort':{"created":1}, '$slice':-1000}} }
-        self._coll.update(query, update);
+        self.get_collection().update(query, update);
         
     def get_followed_users(self, user):
         if not user.following or len(user.following)==0:
             return []
         
-        ids = []
+        query = []
         for f_user_id in user.following:
-            ids.append({'_id':f_user_id})
-        
-        query = {'$or': ids}
+            query.append({'_id':f_user_id})
+        query = {'$or': query}
         fields = {"_id":1, "name":1, "posts":1}
-        coll = self._conn[self._db][self._collection]
-        docs_cursor = coll.find(query, fields)
+        
+        docs_cursor = self.get_collection().find(query, fields)
         users = []
         for doc in docs_cursor:
-            ent = UserEntity()
-            ent.set_from_dict(doc)
+            ent = UserEntity().set_from_dict(doc)
             users.append(ent)
         return users
 
@@ -70,6 +70,7 @@ class UserEntity(orm.Document):
         dic = {}
         dic['id']=self._id
         dic['name']=str(self.name)
+        dic['following']=self.following
         dic['posts'] = []
         for post in self.posts:
             dic['posts'].append(post.get_dict())
@@ -80,6 +81,14 @@ class UserEntity(orm.Document):
             return "_id=None"
         return "_id="+self._id
 
+    
+    
+    
     @classmethod
-    def all_fields(cls):
-        return ["name", "following", "followers", "posts"]
+    def get_coll(cls):
+        conn = Mongo.db_connection
+        coll = conn[cls._db][cls._collection]
+        return coll
+    
+    def get_collection(self):
+        return self.__class__.get_coll();

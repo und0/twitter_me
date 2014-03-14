@@ -1,5 +1,6 @@
 from web.ControllerResponse import ControllerResponse
 from domain.Exceptions import NoSuchUser, UnauthorizedAction
+from AppContext import get_app_context
 
 class UserController:
     '''
@@ -12,8 +13,8 @@ class UserController:
       - Get a specified user's posts
     '''
 
-    def __init__(self, users_repo):
-        self.users_repo = users_repo
+    def __init__(self):
+        self.users_repo = get_app_context().users_repo
     
     def create_user(self, params):
         '''
