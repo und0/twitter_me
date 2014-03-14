@@ -1,5 +1,5 @@
 from web.ControllerResponse import ControllerResponse
-from application.Exceptions import NoSuchUser, UnauthorizedAction
+from domain.Exceptions import NoSuchUser, UnauthorizedAction
 
 class UserController:
     '''

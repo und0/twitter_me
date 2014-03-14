@@ -37,7 +37,7 @@ def main():
     if len(sys.argv) > 2:
         HTTP_PORT = int(sys.argv[2])
 
-    ' First and foremost: set up the application context '    
+    ' First and foremost: set up the domain context '    
     app_context = SimpleAppContext()
     
     ' Set up DB '

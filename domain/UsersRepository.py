@@ -1,5 +1,5 @@
-from application.Exceptions import NoSuchUser
-from application.User import User
+from domain.Exceptions import NoSuchUser
+from domain.User import User
 
 class UsersRepository:
 

@@ -1,8 +1,8 @@
 from data.UserService import UserService
-from application.UsersRepository import UsersRepository
+from domain.UsersRepository import UsersRepository
 
 class SimpleAppContext:
-    ''' An extremely simplified, not in any way generic, version of an application-context -
+    ''' An extremely simplified, not in any way generic, version of an domain-context -
       just to enable dependency injection '''
 
     def __init__(self):

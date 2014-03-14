@@ -1,6 +1,6 @@
 from data.PostMessage import PostMessage
-from application.Exceptions import NoSuchUser
-from application.Exceptions import UnauthorizedAction
+from domain.Exceptions import NoSuchUser
+from domain.Exceptions import UnauthorizedAction
 
 class User:
 
