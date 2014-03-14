@@ -1,4 +1,4 @@
-from domain.UserEntity import UserEntity
+from data.UserEntity import UserEntity
 
 class UserService:
 

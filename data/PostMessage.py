@@ -1,5 +1,5 @@
 import humongolus.field as field
-from domain.UserPost import UserPost
+from data.UserPost import UserPost
 
 class PostMessage(UserPost):
 

@@ -1,4 +1,4 @@
-from domain.UserService import UserService
+from data.UserService import UserService
 from application.UsersRepository import UsersRepository
 
 class SimpleAppContext:
