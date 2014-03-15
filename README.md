@@ -19,6 +19,7 @@ The project provides the following web-API calls:
 * `/tweets/get?uid=[User ID]&fuid=[Followed-user ID]` - Retrieve the feed of the user specified by *fuid*.
  
 Notes:
+
 1. Note the *uid* parameter is a mandatory parameter in all calls and is essentially used as an alternate means of user-identification in this session-less system.
 2. All responses are in JSON format and will contain the following set of fields, which differ in case of success or failure:
   * Upon success:
@@ -33,13 +34,15 @@ Notes:
 Software overview
 -----------------
 
-The code that makes up this project is set into distinct tiers, semantically organized one on top of the other: each tier uses the one below, but not the other way around.
-This split allows for the decoupling and encapsulation of some of the core aspects of the application.
-The following list describes are the layers, ordered according to dependency:
+The code is physically and conceptually splitted into distinct tiers, semantically organized one on top of the other to form this concept:
+each tier uses the one below, but not the other way around.
+
+This split allows for the decoupling and encapsulation of some of the core aspects of the application, described by the list below (organized according to the dependency scheme):
 
 
 1. Web tier: The actual server, handling HTTP requests using designated controllers.
 2. Application tier (*domain*): The application's main business logic.
 3. Data / Persistence tier (*model*): The data read/write and organization layer, interfacing the DB.
 
+As a bottom line, the project is organized such that the web tier is always the 1st one invoked (upon HTTP requests), and it uses the app tier, which in turn uses the data tier.
 
