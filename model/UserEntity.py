@@ -24,8 +24,6 @@ class UserEntity(orm.Document):
         return UserEntity().set_from_dict(user_doc);
     
     def remove_follow(self, following_uid):
-        # This is merely a patch to replace the lines above, seeing that the ORM for some reason
-        # can't handle list items removal via remove() (BUG???) -- though append() works fine!!! 
         query = {"_id":self._id}
         update = {'$pull':{"following":following_uid}}
         self.get_collection().update(query, update);

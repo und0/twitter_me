@@ -45,4 +45,4 @@ class User:
         return f_entity.posts
     
     def get_feed(self):
-        return self.user_service.get_user_feed(self.entity._id)
+        return self.user_service.get_user_feed(self.entity)

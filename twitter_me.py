@@ -1,17 +1,24 @@
-import humongolus as orm 
 import logging
 import sys
-from web import UserControllers
-from pymongo.connection import Connection
-from web.FrontController import SimpleControllersHttpServer
-from model import Mongo
 
-def setup_orm(host, port):
-    Mongo.db_connection = Connection(host, port)
+from AppContext import get_app_context
+import humongolus as orm 
+from web import UserControllers
+from web.FrontController import SimpleControllersHttpServer
+
+def setup_db(host, port):
+    db_connection = get_app_context().db_connection
+    try:
+        db_connection.connect(host, port)
+    except Exception as e:
+        print "Db connection failed (%s:%d)" %host %port
+        print "Cause:", str(e)
+        return
+    get_app_context().user_dao.init()
     
     logging.basicConfig(format='%(asctime)-15s %(message)s')
     db_logger = logging.getLogger("humongolus")
-    orm.settings(db_logger, Mongo.db_connection)
+    orm.settings(db_logger, get_app_context().db_connection.get_connection())
     
 def setup_server(host, port):
     server = SimpleControllersHttpServer((host, port))
@@ -38,7 +45,7 @@ def main():
         HTTP_PORT = int(sys.argv[2])
     
     ' Set up DB '
-    setup_orm(DB_HOST, DB_PORT)
+    setup_db(DB_HOST, DB_PORT)
 
     ' Set up the server '
     server = setup_server(HTTP_HOST, HTTP_PORT)
