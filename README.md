@@ -6,7 +6,7 @@ The mini-twitter project for Everything.Me, by Amit Davidi.
 The project has been written in Python 2.7. It runs a Mongo-DB to store data, with a single collection - 'users' for storing users' data.
 
 The project provides the following web-API calls:
-* `/user/create?uname=[User Name]` - Create a user in the system; The ID will be automatically set by the system and encoded into the response. 
+* `/user/create?uname=[User Name]` - Create a new system user; The ID (an integer) will be automatically set by the system and it's value will be encoded into the response. 
    * *uname* is mandatory
 * `/user/follow?uid=[User ID]&fuid=[Follow-user ID]` - Set up user *uid* to start following user *fuid*.
 * `/user/unfollow?uid=[User ID]&ufuid=[Unfollow-user ID]` - Set up user *uid* to stop following user *ufuid*.
@@ -20,7 +20,7 @@ The project provides the following web-API calls:
   * Upon success:
     * "success" : "true"
     * "payload" : [Actual data]
-  * Upon error:
+  * Upon an error:
     * "success" : "false"
     * "error" : [A text string describing the error]
 
@@ -35,3 +35,4 @@ The following list describes are the layers, ordered according to dependency:
 1. Web tier: The actual server, handling HTTP requests using designated controllers.
 2. Application tier (*domain*): The application's main business logic.
 3. Data / persistence tier (*model*): The data read/write and organization layer, interfacing the DB.
+
