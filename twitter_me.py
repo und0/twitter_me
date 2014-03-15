@@ -11,9 +11,8 @@ def setup_db(host, port):
     try:
         db_connection.connect(host, port)
     except Exception as e:
-        print "Db connection failed (%s:%d)" %host %port
-        print "Cause:", str(e)
-        return
+        print "DB connection failed (%s:%d)" %host %port
+        raise e
     get_app_context().user_dao.init()
     
     logging.basicConfig(format='%(asctime)-15s %(message)s')
