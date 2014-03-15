@@ -27,8 +27,15 @@ class UserDAO:
         return user
 
     def add_follow(self, user, follow_uid):
-        user.following.append(follow_uid)
-        user.save()
+        
+        # user.following.append(follow_uid)
+        # user.save()
+        
+        query = {"_id":user._id}
+        update = {'$push':{"following":follow_uid}}
+        self.collection.update(query, update);
+        user = self.get_user(user._id)
+
     
     def remove_follow(self, user, follow_uid):
 
@@ -37,7 +44,7 @@ class UserDAO:
         #   user.save()
         # BUT! the ORM appears to be buggy!!! So have have to do this manually
         
-        query = {"_id":user}
+        query = {"_id":user._id}
         update = {'$pull':{"following":follow_uid}}
         self.collection.update(query, update);
         user = self.get_user(user._id)

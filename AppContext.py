@@ -1,5 +1,4 @@
 from domain.UsersRepository import UsersRepository
-from domain.UserService import UserService
 from model.UserDAO import UserDAO
 from db.DbConnection import DbConnection
 
@@ -11,8 +10,7 @@ class SimpleAppContext:
     def __init__(self):
         self.db_connection = DbConnection()
         self.user_dao = UserDAO(self.db_connection)
-        self.users_service = UserService(self.user_dao)
-        self.users_repo = UsersRepository(self.users_service)
+        self.users_repo = UsersRepository(self.user_dao)
 
 app_context = SimpleAppContext()
 

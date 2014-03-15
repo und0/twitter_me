@@ -12,7 +12,6 @@ class UserEntity(orm.Document):
     following = orm.List(type=int)
     posts = orm.List()
     
-
     def set_from_dict(self, dic):
         self._id = dic['_id']
         self.name = dic['name']
