@@ -23,7 +23,7 @@ class UserDAO:
     def get_user(self, user_id):
         user = self.mongo_dao.get_entity(user_id)
         if not user:
-            raise NoSuchUser
+            raise NoSuchUser(user_id)
         return user
 
     def add_follow(self, user, follow_uid):
