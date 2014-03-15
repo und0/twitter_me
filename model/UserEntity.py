@@ -3,6 +3,21 @@ import humongolus as orm
 from model.PostMessage import PostMessage
 
 class UserEntity(orm.Document):
+    '''
+    The actual entity containing user data, as stored in the DB.
+    
+    Inherits the orm.Document class in order to enable ORM operations
+    such as update() and save(), but since the ORM implementation is severely
+    buggy and not complete, object<->dictionary adapter-methods have been
+    manually written, and can be used whenever the entity is read directly
+    from the DB rather than via the ORM's API (e.g. find_one()).
+    
+    Effectively, this can be handy in two cases:
+    * A complex query / multiple-results operation has been manually run on the DB
+      due to the fact that the ORM API was found insufficient.
+    * A simple query has been run but the result contains complex fields (e.g. embedded
+      documents) the ORM can't handle.
+    '''
 
     _db = "twitter_me"
     _collection = "users"
