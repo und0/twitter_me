@@ -1,7 +1,7 @@
 from web.ControllerResponse import ControllerResponse
-from domain.Exceptions import UnauthorizedAction
 from AppContext import get_app_context
 from model.UserDAO import NoSuchUser
+from domain.User import UnauthorizedAction
 
 class UserController:
     '''
@@ -12,6 +12,9 @@ class UserController:
       - Post a message (followers will see it in their feeds)
       - Get my feed
       - Get a specified user's posts
+    
+    Essentially interacts with the User and UserRepository objects
+    to handle these requests.
     '''
 
     def __init__(self):

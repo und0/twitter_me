@@ -69,7 +69,7 @@ class UserDAO:
         # we have to do this manually
         
         query = {"_id":user._id}
-        update = { '$push':{ "posts":{'$each':[post.get_dict()], '$sort':{"created":1}, '$slice':-1000}} }
+        update = { '$push':{ "posts":{'$each':[post.get_dict()], '$sort':{"created":-1}, '$slice':-100000}} }
         self.collection.update(query, update);
         user = self.get_user(user._id)
         

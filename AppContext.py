@@ -1,6 +1,6 @@
-from domain.UsersRepository import UsersRepository
 from model.UserDAO import UserDAO
 from db.DbConnection import DbConnection
+from domain.User import UsersRepository
 
 class SimpleAppContext:
     ''' An extremely simplified, not in any way generic,
