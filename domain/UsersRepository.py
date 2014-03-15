@@ -1,4 +1,3 @@
-from domain.Exceptions import NoSuchUser
 from domain.User import User
 
 class UsersRepository:
@@ -12,6 +11,4 @@ class UsersRepository:
     
     def get_user(self, user_id):
         entity = self.user_service.get_user(user_id)
-        if not entity:
-            raise NoSuchUser(user_id)
         return User(entity, self.user_service);

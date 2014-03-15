@@ -1,6 +1,7 @@
 from web.ControllerResponse import ControllerResponse
-from domain.Exceptions import NoSuchUser, UnauthorizedAction
+from domain.Exceptions import UnauthorizedAction
 from AppContext import get_app_context
+from model.UserDAO import NoSuchUser
 
 class UserController:
     '''

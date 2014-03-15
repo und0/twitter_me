@@ -1,4 +1,3 @@
-from domain.Exceptions import NoSuchUser
 from model.MongoDAO import MongoDAO
 from model.UserEntity import UserEntity
 

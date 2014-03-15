@@ -1,5 +1,4 @@
 from model.PostMessage import PostMessage
-from domain.Exceptions import NoSuchUser
 from domain.Exceptions import UnauthorizedAction
 
 class User:
@@ -13,8 +12,6 @@ class User:
         
     def follow(self, user_id):
         f_entity = self.user_service.get_user(user_id)
-        if not f_entity:
-            raise NoSuchUser(user_id)
 
         ' Add the followed user to the ones Im following '        
         if not user_id in self.entity.following:
@@ -22,8 +19,6 @@ class User:
     
     def unfollow(self, user_id):
         uf_entity = self.user_service.get_user(user_id)
-        if not uf_entity:
-            raise NoSuchUser(user_id)
 
         ' Remove that user from the ones Im following '
         if user_id in self.entity.following:
@@ -39,9 +34,6 @@ class User:
             raise UnauthorizedAction(self.entity._id, "User is not following "+str(user_id))
         
         f_entity = self.user_service.get_user(user_id)
-        if not f_entity:
-            raise NoSuchUser(user_id)
-        
         return f_entity.posts
     
     def get_feed(self):
