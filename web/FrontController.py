@@ -85,8 +85,8 @@ class SimpleFrontController(BaseHTTPServer.BaseHTTPRequestHandler):
 		params = parse_qs(parsedUrl.query)
 		
 		'Based on the path, find and invoke a pre-mapped controller callback'
-		if not parsedUrl.path in self.controller_callbacks:
-			self.send_response(404)
+		if not parsedUrl.path in self.controller_callbacks.keys():
+			self.send_error(404)
 			return
 		
 		controller_cb = self.controller_callbacks[parsedUrl.path]

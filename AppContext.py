@@ -12,7 +12,7 @@ class SimpleAppContext:
         self.db_connection = DbConnection()
         self.user_dao = UserDAO(self.db_connection)
         self.users_repo = UsersRepository(self.user_dao)
-        self.users_controller == UserController(self.users_repo)
+        self.users_controller = UserController(self.users_repo)
 
 app_context = SimpleAppContext()
 
