@@ -3,7 +3,9 @@ twitter.me
 
 The mini-twitter project for Everything.Me, by Amit Davidi.
 
-The project has been written in Python 2.7. It runs a Mongo-DB to store data, with a single collection - 'users' for storing users' data.
+The project has been written in Python 2.7.
+
+Data is stored using the MongoDB technology.
 
 
 API
