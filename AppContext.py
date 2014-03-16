@@ -1,6 +1,7 @@
 from model.UserDAO import UserDAO
 from db.DbConnection import DbConnection
-from domain.User import UsersRepository
+from domain.UserManagement import UsersRepository
+from web.AppControllers import UserController
 
 class SimpleAppContext:
     ''' An extremely simplified, not in any way generic,
@@ -11,6 +12,7 @@ class SimpleAppContext:
         self.db_connection = DbConnection()
         self.user_dao = UserDAO(self.db_connection)
         self.users_repo = UsersRepository(self.user_dao)
+        self.users_controller == UserController(self.users_repo)
 
 app_context = SimpleAppContext()
 

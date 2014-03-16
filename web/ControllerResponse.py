@@ -1,4 +1,5 @@
 class ControllerResponse:
+    ''' @see SimpleFrontControllerHTTPServer '''
 
     def __init__(self):
         self.content = ""

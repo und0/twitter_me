@@ -3,8 +3,7 @@ import sys
 
 from AppContext import get_app_context
 import humongolus as orm 
-from web import UserControllers
-from web.FrontController import SimpleControllersHttpServer
+from web.FrontController import SimpleFrontControllerHTTPServer
 
 def setup_db(host, port):
     db_connection = get_app_context().db_connection
@@ -20,8 +19,8 @@ def setup_db(host, port):
     orm.settings(db_logger, get_app_context().db_connection.get_connection())
     
 def setup_server(host, port):
-    server = SimpleControllersHttpServer((host, port))
-    users_controller = UserControllers.UserController()
+    server = SimpleFrontControllerHTTPServer((host, port))
+    users_controller = get_app_context().users_controller
     server.bind_controller("/user/create", users_controller, 'create_user')
     server.bind_controller("/user/follow", users_controller, 'follow_user')
     server.bind_controller("/user/unfollow", users_controller, 'unfollow_user')
